@@ -31,8 +31,8 @@ Document the registers that are used to interact with your peripheral
 
 ## How to test
 
-Explain how to use your project
+TBD. It's a calculator, so just test it by running calculations. Exact protocol coming soon.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+Might add direct-to-XY output, not sure yet
