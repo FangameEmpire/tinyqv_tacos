@@ -11,7 +11,7 @@ You can also include images in this folder and reference them in the markdown. E
 512 kb in size, and the combined size of all images must be less than 1 MB.
 -->
 
-# Your project title
+# Thompson's Accelerator for Calculating Orbital Spacewar
 
 Author: Nicklaus Thompson
 
@@ -19,7 +19,7 @@ Peripheral index: nn
 
 ## What it does
 
-Explain what your peripheral does and how it works
+TBD, it calcultes trig and geometry.
 
 ## Register map
 
