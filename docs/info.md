@@ -19,7 +19,7 @@ Peripheral index: nn
 
 ## What it does
 
-TBD, it calcultes trig and geometry.
+TBD, it calculates squares and roots.
 
 ## Register map
 
@@ -35,4 +35,4 @@ TBD. It's a calculator, so just test it by running calculations. Exact protocol 
 
 ## External hardware
 
-Might add direct-to-XY output, not sure yet
+None
