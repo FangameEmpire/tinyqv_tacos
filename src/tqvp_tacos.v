@@ -33,13 +33,13 @@ module tqvp_tacos (
 
     // Internal and external control is done through a register
 	reg [31:0] alu_status;
-	wire [3:0] alu_opcode;
-	assign alu_opcode = alu_status[3:0];
+	wire [2:0] alu_opcode;
+	assign alu_opcode = alu_status[2:0];
 	always @(posedge clk) begin
 		if (!rst_n) begin
 			alu_status[31:16] <= 0;
 		end else begin
-			alu_status[19:16] <= alu_opcode;
+			alu_status[18:16] <= alu_opcode;
 		end
 	end
 	
@@ -82,24 +82,24 @@ module tqvp_tacos (
         if (!rst_n) begin
             alu_c <= 0;
         end else if (update_c) begin
-			if (alu_opcode == 4'h0) begin
+			if (alu_opcode == 3'h0) begin
 				alu_c <= sqrt_out; // sqrt(A)
-			end else if (alu_opcode == 4'h1) begin
+			end else if (alu_opcode == 3'h1) begin
 				alu_c <= sqrt_rem; // sqrt(A)
-			end else if (alu_opcode == 4'h2) begin
+			end else if (alu_opcode == 3'h2) begin
 				alu_c <= mul_out; // A^2
-			end else if (alu_opcode == 4'h3) begin
+			end else if (alu_opcode == 3'h3) begin
 				alu_c <= alu_c + mul_out;
-			end else if (alu_opcode == 4'h4) begin
+			end else if (alu_opcode == 3'h4) begin
 				alu_c <= sqrt_out; // sqrt(C)
-			end else if (alu_opcode == 4'h5) begin
+			end else if (alu_opcode == 3'h5) begin
 				alu_c <= sqrt_rem; // sqrt(C)
-			end else if (alu_opcode == 4'h6) begin
+			end else if (alu_opcode == 3'h6) begin
 				alu_c <= sqrt_out; // sqrt(A^2 + B^2)
-			end else if (alu_opcode == 4'h7) begin
+			end else if (alu_opcode == 3'h7) begin
 				alu_c <= sqrt_rem; // sqrt(A^2 + B^2)
 			end else begin
-				alu_c <= alu_status;
+				alu_c <= 0;
 			end
 		end else begin
             alu_c <= alu_c;
@@ -108,6 +108,8 @@ module tqvp_tacos (
 	
 	// Square and square root operations
 	wire start_sqrt, start_mul, busy_sqrt, busy_mul, done_mul, valid_sqrt, valid_mul, ovf_mul;
+	assign start_sqrt = 1;
+	assign start_mul = 1;
 	sqrt #(.WIDTH(WIDTH), .FBITS(FBITS)) square_calculator (clk, start_sqrt, busy_sqrt, valid_sqrt, sqrt_in, sqrt_out, sqrt_rem);
 	mul #(.WIDTH(WIDTH), .FBITS(FBITS)) product_calculator (clk, ~rst_n, start_mul, busy_mul, done_mul, valid_mul, ovf_mul, alu_a, mul_b_in, mul_out);
 
@@ -117,7 +119,8 @@ module tqvp_tacos (
     // Address 0 reads the example data register.  
     // Address 4 reads ui_in
     // All other addresses read 0.
-    assign data_out = (address == 6'h0) ? alu_status :
+    assign data_out = ~rst_n            ? 0 :
+					  (address == 6'h0) ? alu_status :
                       (address == 6'h1) ? alu_a :
                       (address == 6'h2) ? alu_b :
                       (address == 6'h3) ? alu_c :
